@@ -25,8 +25,10 @@ class UserList(Resource):
         if existing_user:
             return {'error': 'Email already registered'}, 400
 
-        new_user = facade.create_user(user_data)
-        return {'id': new_user.id, 'first_name': new_user.first_name, 'last_name': new_user.last_name, 'email': new_user.email}, 201
+        password = user_data.pop('password')
+        new_user = facade.create_user({**user_data, 'password': password})
+        return {'id': new_user.id, 'first_name': new_user.first_name, 'last_name': new_user.last_name,
+                'email': new_user.email}, 201
 
     def get(self):
         """Get all users"""
