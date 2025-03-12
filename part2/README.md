@@ -1,4 +1,4 @@
-# HolbertonBnB Part2
+# HolbertonBnB Part2 
 
 ## Project Description
 
