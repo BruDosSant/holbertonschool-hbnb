@@ -23,7 +23,7 @@ class Review(BaseModel):
     @property
     def Text(self):
         return self._text
-    @Text.setter
+    @text.setter
     def validate_text(self, text):
         """Valida que el texto no esté vacío."""
         if not isinstance(text, str) or not text.strip():
@@ -33,7 +33,7 @@ class Review(BaseModel):
     @property
     def Rating(self):
         return self._rating
-    @Rating.setter
+    @rating.setter
     def validate_rating(self, rating):
         """Valida que la calificación esté entre 1 y 5."""
         if not isinstance(rating, int) or not (1 <= rating <= 5):
