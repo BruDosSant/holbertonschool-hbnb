@@ -47,8 +47,6 @@ class User(BaseModel):
 
     @email.setter
     def email(self, value):
-        if not value:
-            raise ValueError("Email is required")
         try:
             email_info = validate_email(value, check_deliverability=False)  
             self._email = email_info.normalized
@@ -56,9 +54,11 @@ class User(BaseModel):
             raise ValueError(f"Invalid email: {e}")
         
     def hash_password(self, password):
+        from app import bcrypt
         """Hashes the password before storing it."""
         self.password = bcrypt.generate_password_hash(password).decode('utf-8')
 
     def verify_password(self, password):
+        from app import bcrypt
         """Verifies if the provided password matches the hashed password."""
         return bcrypt.check_password_hash(self.password, password)
