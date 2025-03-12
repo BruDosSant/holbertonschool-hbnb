@@ -21,7 +21,7 @@ class Review(BaseModel):
         self.user = user
 
     @property
-    def Text(self):
+    def text(self):
         return self._text
     @text.setter
     def validate_text(self, text):
@@ -31,7 +31,7 @@ class Review(BaseModel):
         return text
 
     @property
-    def Rating(self):
+    def rating(self):
         return self._rating
     @rating.setter
     def validate_rating(self, rating):
@@ -41,9 +41,9 @@ class Review(BaseModel):
         return rating
 
     @property
-    def Place(self):
+    def place(self):
         return self._place
-    @Place.setter
+    @place.setter
     def validate_place(self, place):
         """Valida que la reseña esté asociada a un lugar válido."""
         if not isinstance(place, Place):
