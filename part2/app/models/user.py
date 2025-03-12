@@ -54,11 +54,11 @@ class User(BaseModel):
             self._email = email_info.normalized
         except EmailNotValidError as e:
             raise ValueError(f"Invalid email: {e}")
+
     def hash_password(self, password):
         """Hashes the password before storing it."""
-        self.password = current_app.bcrypt.generate_password_hash(password).decode('utf-8')
+        self.password = bcrypt.generate_password_hash(password).decode('utf-8')
 
     def verify_password(self, password):
         """Verifies if the provided password matches the hashed password."""
-        return current_app.bcrypt.check_password_hash(self.password, password)
-    
+        return bcrypt.check_password_hash(self.password, password)

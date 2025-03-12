@@ -7,12 +7,14 @@ from app.api.v1.reviews import api as reviews_ns
 from config import config
 from flask_bcrypt import Bcrypt
 
+bcrypt = Bcrypt()
+
 def create_app(config_class=config['development']):
     app = Flask(__name__)
-    app.config.from_object(config[config_class])
+    app.config.from_object(config_class)
     api = Api(app, version='1.0', title='HBnB API', description='HBnB Application API')
+    bcrypt.init_app(app)
 
-    # Register the namespaces
     api.add_namespace(users_ns, path='/api/v1/users')
     api.add_namespace(amenities_ns, path='/api/v1/amenities')
     api.add_namespace(places_ns, path='/api/v1/places')
