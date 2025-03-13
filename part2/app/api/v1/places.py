@@ -85,6 +85,7 @@ class PlaceResource(Resource):
             return {'error': 'Place not found'}, 404
         return {'title': place.title, 'description': place.description, 'price': place.price, 'latitude': place.latitude, 'longitude': place.longitude, 'owner': {'id': place.owner.id, 'first_name': place.owner.first_name, 'last_name': place.owner.last_name, 'email': place.owner.email}}, 200
 
+    @jwt_required()
     @api.expect(place_model)
     @api.response(200, 'Place updated successfully')
     @api.response(404, 'Place not found')
@@ -92,15 +93,22 @@ class PlaceResource(Resource):
     def put(self, place_id):
         """Update a place's information"""
         data = api.payload
-        verify_place = facade.get_place(place_id)
-        
-        if not verify_place:
+        current_user = get_jwt_identity()
+        place = facade.get_place(place_id)
+
+        if not place:
             return {'error': 'place not found'}, 404
 
+        if place.owner.id != current_user["id"]:
+            return {'error': 'Unauthorized action'}, 403
+
+        if not data or not isinstance(data, dict):
+            return {'error': 'Invalid input data. Expected JSON object.'}, 400
+
         updated_place = facade.update_place(place_id, data)
-        
+
         if not updated_place:
             return {'error': 'Input not valid'}, 400
-        
+
         return {'message': 'Place updated successfully'}, 200
     
