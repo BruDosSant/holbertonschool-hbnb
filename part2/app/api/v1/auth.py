@@ -1,7 +1,6 @@
 from flask_restx import Namespace, Resource, fields
-from flask_jwt_extended import create_access_token 
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from app.services import facade
-from flask_jwt_extended import jwt_required, get_jwt_identity
 
 api = Namespace('auth', description='Authentication operations')
 
