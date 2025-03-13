@@ -99,7 +99,7 @@ class PlaceResource(Resource):
         if not place:
             return {'error': 'place not found'}, 404
 
-        if place.owner.id != current_user["id"]:
+        if place.owner.id != current_user:
             return {'error': 'Unauthorized action'}, 403
 
         if not data or not isinstance(data, dict):
