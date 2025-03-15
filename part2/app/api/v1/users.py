@@ -1,6 +1,7 @@
 from flask_restx import Namespace, Resource, fields
 from app.services import facade
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask import request
 
 api = Namespace('users', description='User operations')
 
@@ -63,3 +64,40 @@ class UserResource(Resource):
         user_updated = facade.update_user(user_id, data)
 
         return {'id': user.id, 'first_name': user.first_name, 'last_name': user.last_name, 'email': user.email}, 200
+class AdminUserModify(Resource):
+    @jwt_required()
+    def put(self, user_id):
+        """Admin modifies a user"""
+        current_user = get_jwt_identity() #obtiene el usuario actual
+        if not current_user['is_admin']: #verifica si el usuario es admin
+            return {'error': 'Admin privileges required'}, 403
+
+        data = request.json #obtiene los datos del usuario a modificar
+        email = data.get('email') #obtiene el email del usuario a modificar
+
+        if email:
+            existing_user = facade.get_user_by_email(email) #verifica si el email del ususario a modificar ya esta registrado
+            if existing_user and existing_user.id != user_id: 
+                return {'error': 'Email already in use'}, 400 
+
+        updated_user = facade.update_user(user_id, data) 
+        return {'message': 'User updated successfully'}, 200
+
+    
+@api.route('/users/')
+class AdminUserCreate(Resource):
+    @jwt_required()  #permite a un usuario admin crear otros usuarios
+    def post(self):
+        """Admin creates a new user"""
+        current_user = get_jwt_identity()
+        if not current_user['is_admin']: #verifica si el usuario es admin
+            return {'error': 'Admin privileges required'}, 403
+
+        user_data = request.json #obtiene los datos del usuario
+        email = user_data.get('email')
+
+        if facade.get_user_by_email(email): #verifica si el email ya esta registrado
+            return {'error': 'Email already registered'}, 400
+
+        new_user = facade.create_user(user_data) #crea el usuario
+        return {'id': new_user.id, 'email': new_user.email}, 201

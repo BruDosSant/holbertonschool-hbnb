@@ -107,6 +107,24 @@ class ReviewResource(Resource):
         if facade.delete_review(review_id):
             return {'message': 'Review deleted successfully'}, 200
         return {'error': 'Review not found'}, 404
+@api.route('/reviews/<review_id>')
+class AdminReviewDelete(Resource):
+    @jwt_required()
+    def delete(self, review_id):
+        """Admins can delete any review"""
+        current_user = get_jwt_identity()
+        user_id = current_user['id']
+        is_admin = current_user['is_admin']
+
+        review = facade.get_review(review_id)
+        if not review:
+            return {'error': 'Review not found'}, 404
+
+        if not is_admin and review.user.id != user_id:
+            return {'error': 'Unauthorized action'}, 403
+
+        facade.delete_review(review_id)
+        return {'message': 'Review deleted successfully'}, 200
 
 @api.route('/places/<place_id>/reviews')
 class PlaceReviewList(Resource):

@@ -1,5 +1,7 @@
 from flask_restx import Namespace, Resource, fields
 from app.services import facade
+from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask import request
 
 api = Namespace('amenities', description='Amenity operations')
 
@@ -54,4 +56,28 @@ class AmenityResource(Resource):
             return {'error': 'Amenity not found'}, 404
         update_amenity = facade.amenity_repo.update(amenity_id, data)
         return {'id': update_amenity.id, 'name': update_amenity.name}, 200
-        
+@api.route('/amenities/<amenity_id>')
+class AdminAmenityModify(Resource):
+    @jwt_required()
+    def put(self, amenity_id):
+        """Admin modifies an amenity"""
+        current_user = get_jwt_identity() #obtiene el usuario actual
+        if not current_user['is_admin']: #si el usuario no es admin
+            return {'error': 'Admin privileges required'}, 403
+
+        amenity_data = request.json #obtiene los datos del amenity a modificar
+        updated_amenity = facade.update_amenity(amenity_id, amenity_data) #modifica el amenity
+        return {'message': 'Amenity updated successfully'}, 200
+
+@api.route('/amenities/')
+class AdminAmenityCreate(Resource):
+    @jwt_required()
+    def post(self):
+        """Admin creates an amenity"""
+        current_user = get_jwt_identity() #obtiene el usuario actual
+        if not current_user['is_admin']: #si el usuario no es admin
+            return {'error': 'Admin privileges required'}, 403
+
+        amenity_data = request.json #obtiene los datos del amenity a crear
+        new_amenity = facade.create_amenity(amenity_data) #crea un nuevo amenity
+        return {'id': new_amenity.id, 'name': new_amenity.name}, 201

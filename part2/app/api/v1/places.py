@@ -1,6 +1,7 @@
 from flask_restx import Namespace, Resource, fields
 from app.services import facade
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask import request
 
 api = Namespace('places', description='Place operations')
 
@@ -111,4 +112,20 @@ class PlaceResource(Resource):
             return {'error': 'Input not valid'}, 400
 
         return {'message': 'Place updated successfully'}, 200
-    
+@api.route('/places/<place_id>')
+class AdminPlaceDelete(Resource):
+    @jwt_required()
+    def delete(self, place_id):
+        """Admins can delete any place"""
+        current_user = get_jwt_identity() #obtiene el usuario actual
+        is_admin = current_user['is_admin'] #verifica si el usuario es admin
+
+        place = facade.get_place(place_id) #obtiene el place a eliminar
+        if not place:
+            return {'error': 'Place not found'}, 404 #si no existe el place
+
+        if not is_admin: #si el usuario no es admin 
+            return {'error': 'Unauthorized action'}, 403
+
+        facade.delete_place(place_id)
+        return {'message': 'Place deleted successfully'}, 200
