@@ -49,40 +49,26 @@ class UserResource(Resource):
             return {'error': 'User not found'}, 404
         return {'id': user.id, 'first_name': user.first_name, 'last_name': user.last_name, 'email': user.email}, 200
 
+    @jwt_required()
     @api.expect(user_model, validate=True)
     @api.response(200, 'User is successfully updated')
     @api.response(404, 'User not found')
     @api.response(400, 'Invalid input data')
     def put(self, user_id):
-        """Update a User"""
-        data = api.payload
+            """Update a User (Admins or user themselves only)"""
+            current_user = get_jwt_identity()  #Obtener usuario autenticado
 
-        user = facade.get_user(user_id)
-        if not user:
-            return {'error': "User not found"}, 404
+            if not current_user['is_admin'] and current_user['id'] != user_id: #verifica si el usuario es admin o el mismo usuario
+                return {'error': 'Admin privileges required'}, 403
 
-        user_updated = facade.update_user(user_id, data)
+            user = facade.get_user(user_id) #obtiene el usuario
+            if not user:
+                return {'error': "User not found"}, 404
 
-        return {'id': user.id, 'first_name': user.first_name, 'last_name': user.last_name, 'email': user.email}, 200
-class AdminUserModify(Resource):
-    @jwt_required()
-    def put(self, user_id):
-        """Admin modifies a user"""
-        current_user = get_jwt_identity() #obtiene el usuario actual
-        if not current_user['is_admin']: #verifica si el usuario es admin
-            return {'error': 'Admin privileges required'}, 403
+            data = api.payload #obtiene los datos del usuario
+            updated_user = facade.update_user(user_id, data) #actualiza el usuario
 
-        data = request.json #obtiene los datos del usuario a modificar
-        email = data.get('email') #obtiene el email del usuario a modificar
-
-        if email:
-            existing_user = facade.get_user_by_email(email) #verifica si el email del ususario a modificar ya esta registrado
-            if existing_user and existing_user.id != user_id: 
-                return {'error': 'Email already in use'}, 400 
-
-        updated_user = facade.update_user(user_id, data) 
-        return {'message': 'User updated successfully'}, 200
-
+            return {'id': user.id, 'first_name': user.first_name, 'last_name': user.last_name, 'email': user.email}, 200
     
 @api.route('/users/')
 class AdminUserCreate(Resource):

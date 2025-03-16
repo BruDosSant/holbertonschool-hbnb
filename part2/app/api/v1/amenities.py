@@ -12,16 +12,22 @@ amenity_model = api.model('Amenity', {
 
 @api.route('/')
 class AmenityList(Resource):
+    @jwt_required()
     @api.expect(amenity_model)
     @api.response(201, 'Amenity successfully created')
     @api.response(400, 'Invalid input data')
     def post(self):
-        """Crear un nuevo amenity"""
-        data = api.payload
+        """Crear un nuevo amenity (Solo admins)"""
+        current_user = get_jwt_identity()  #obtiene el usuario actual
         
-        if not data or 'name' not in data:
+        if not current_user['is_admin']: #si el usuario no es admin
+            return {'error': 'Admin privileges required'}, 403
+
+        data = api.payload #obtiene los datos del amenity a crear
+        if not data or 'name' not in data: #si no hay datos o no hay nombre
             return {'message': 'Invalid input data'}, 400
-        amenity = facade.create_amenity(data)
+
+        amenity = facade.create_amenity(data) #crea un nuevo amenity
         return {'id': amenity.id, 'name': amenity.name}, 201
 
     @api.response(200, 'List of amenities retrieved successfully')
@@ -44,18 +50,25 @@ class AmenityResource(Resource):
         
         return {'id': amenity.id, 'name': amenity.name}, 200
 
+    @jwt_required()
     @api.expect(amenity_model)
     @api.response(200, 'Amenity updated successfully')
     @api.response(404, 'Amenity not found')
     @api.response(400, 'Invalid input data')
     def put(self, amenity_id):
-        """Update an amenity's information"""
-        data = api.payload
-        amenity = facade.amenity_repo.get(amenity_id)
-        if not amenity:
+        """Update an amenity's information (Admins only)"""
+        current_user = get_jwt_identity()  #Obtener usuario autenticado
+
+        if not current_user['is_admin']: #si el usuario no es admin
+            return {'error': 'Admin privileges required'}, 403
+
+        data = api.payload #obtiene los datos del amenity a modificar
+        amenity = facade.amenity_repo.get(amenity_id) #obtiene el amenity
+        if not amenity: #si el amenity no existe
             return {'error': 'Amenity not found'}, 404
-        update_amenity = facade.amenity_repo.update(amenity_id, data)
-        return {'id': update_amenity.id, 'name': update_amenity.name}, 200
+
+        updated_amenity = facade.amenity_repo.update(amenity_id, data) #modifica el amenity
+        return {'id': updated_amenity.id, 'name': updated_amenity.name}, 200
 @api.route('/amenities/<amenity_id>')
 class AdminAmenityModify(Resource):
     @jwt_required()
