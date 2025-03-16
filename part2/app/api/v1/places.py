@@ -49,13 +49,17 @@ class PlaceList(Resource):
         data = api.payload
         existing_place = facade.get_place(data['title'])
         current_user = get_jwt_identity()
-        if data['owner_id'] != current_user:
-            return {'error': 'Unauthorized action'}, 403
+        user_id = current_user['id']
+        data['owner_id'] = user_id
+        
         if existing_place:
             return {'error': 'Place already exists'}, 400
-        owner = facade.get_user(data['owner_id'])
+        
+        owner = facade.get_user(user_id)
+        
         if not owner:
             return {'error': 'Owner not found'}, 404
+
         data.pop('owner_id')
         data['owner'] = owner
         n_place = facade.create_place(data)
@@ -112,7 +116,8 @@ class PlaceResource(Resource):
             return {'error': 'Input not valid'}, 400
 
         return {'message': 'Place updated successfully'}, 200
-@api.route('/places/<place_id>')
+
+@api.route('/<place_id>')
 class AdminPlaceDelete(Resource):
     @jwt_required()
     def delete(self, place_id):

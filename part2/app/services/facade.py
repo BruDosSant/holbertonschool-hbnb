@@ -142,3 +142,12 @@ class HBnBFacade:
             self.review_repo.delete(review_id)
             return True
         return False
+
+    def delete_place(self, place_id):
+        """Eliminar un place por ID"""
+        place = self.place_repo.get(place_id)
+        if not place:
+            return False
+        
+        self.place_repo.delete(place_id)
+        return True
