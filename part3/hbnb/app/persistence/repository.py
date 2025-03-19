@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
-from app import db
-from app.persistence.repository import SQLAlchemyRepository
-from app.models.user import User  
+from hbnb.app.persistence.repository import SQLAlchemyRepository
+from hbnb.app.models.user import User  
 
 class Repository(ABC):
     @abstractmethod
@@ -60,6 +59,7 @@ class SQLAlchemyRepository(Repository):
         self.model = model
 
     def add(self, obj):
+        from hbnb.app import db
         db.session.add(obj)
         db.session.commit()
 

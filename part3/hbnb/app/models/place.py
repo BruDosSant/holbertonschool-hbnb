@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """Class Place"""
 
+from app import db
 import uuid
 from .base import BaseModel
 from .user import User
@@ -9,6 +10,17 @@ from .user import User
 class Place(BaseModel):
     """Class Place, inherits from BaseModel"""
 
+    __tablename__ = 'places'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    title = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String(512), nullable=True)
+    price = db.Column(db.Float, nullable=False)
+    latitude = db.Column(db.Float, nullable=False)
+    longitude = db.Column(db.Float, nullable=False)
+    
+    
+    
     def __init__(self, title: str, price: float, latitude: float, longitude: float, owner: User, description=None, amenities=None, reviews=None, place_id=None):
         """Constructor method"""      
         super().__init__()

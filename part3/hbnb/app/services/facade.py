@@ -1,24 +1,21 @@
-from app.persistence.repository import InMemoryRepository
-from app.models.user import User
-from app.models.amenity import Amenity
-from app.models.place import Place
-from app.models.review import Review
-from app.persistence.repository import SQLAlchemyRepository
-from app.services.repositories.user_repository import UserRepository
+from hbnb.app.persistence.repository import InMemoryRepository
+from hbnb.app.models.user import User
+from hbnb.app.models.amenity import Amenity
+from hbnb.app.models.place import Place
+from hbnb.app.models.review import Review
+from hbnb.app.services.repositories.user_repository import UserRepository  # changes
 
 class HBnBFacade:
     def __init__(self):
         self.user_repo = UserRepository()
-        self.user_repo = InMemoryRepository()
         self.place_repo = InMemoryRepository()
         self.review_repo = InMemoryRepository()
         self.amenity_repo = InMemoryRepository()	
-        self.user_repo = SQLAlchemyRepository(User)
 
     def create_user(self, user_data):
         user = User(**user_data)
         user.hash_password(user_data['password'])
-        self.user_repo.add(user)
+        self.user_repo.add(user) #usar user repository para agregar un  user
         return user
 
     def get_user(self, user_id):
@@ -28,7 +25,7 @@ class HBnBFacade:
         return self.user_repo.get_all()
 
     def get_user_by_email(self, email):
-        return self.user_repo.get_by_attribute('email', email)
+        return self.user_repo.get_user_by_email(email)
     
     # metodo para actualizar usuario
     def update_user(self, user_id, new_info):
@@ -45,8 +42,16 @@ class HBnBFacade:
             user.email = new_info['email']
         if 'password' in new_info:
             user.hash_password(new_info['password'])  # Hash the new password
-        self.user_repo.update(user_id, new_info)
+        self.user_repo.update(user_id, user)
         return user
+
+    # changes: Método para eliminar un usuario
+    def delete_user(self, user_id):
+        user = self.user_repo.get(user_id)  # changes: Usar UserRepository para obtener usuario
+        if not user:
+            return False
+        self.user_repo.delete(user_id)  # changes: Usar UserRepository para eliminar usuario
+        return True
 
     def create_amenity(self, amenity_data):
         """Crea un nuevo amenity."""
