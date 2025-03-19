@@ -3,17 +3,21 @@ from app.models.user import User
 from app.models.amenity import Amenity
 from app.models.place import Place
 from app.models.review import Review
+from app.persistence.repository import SQLAlchemyRepository
+from app.services.repositories.user_repository import UserRepository
 
 class HBnBFacade:
     def __init__(self):
+        self.user_repo = UserRepository()
         self.user_repo = InMemoryRepository()
         self.place_repo = InMemoryRepository()
         self.review_repo = InMemoryRepository()
         self.amenity_repo = InMemoryRepository()	
-
+        self.user_repo = SQLAlchemyRepository(User)
 
     def create_user(self, user_data):
         user = User(**user_data)
+        user.hash_password(user_data['password'])
         self.user_repo.add(user)
         return user
 
@@ -26,7 +30,7 @@ class HBnBFacade:
     def get_user_by_email(self, email):
         return self.user_repo.get_by_attribute('email', email)
     
-    #Rodrigo- metodo para actualizar usuario
+    # metodo para actualizar usuario
     def update_user(self, user_id, new_info):
         user = self.user_repo.get(user_id)
         if not user:
@@ -39,6 +43,8 @@ class HBnBFacade:
             user.last_name = new_info['last_name']
         if 'email' in new_info:
             user.email = new_info['email']
+        if 'password' in new_info:
+            user.hash_password(new_info['password'])  # Hash the new password
         self.user_repo.update(user_id, new_info)
         return user
 
@@ -151,3 +157,5 @@ class HBnBFacade:
         
         self.place_repo.delete(place_id)
         return True
+
+

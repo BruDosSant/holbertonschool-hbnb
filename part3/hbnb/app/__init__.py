@@ -8,17 +8,20 @@ from app.api.v1.auth import api as auth_ns
 from config import config
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
+from flask_sqlalchemy import SQLAlchemy
 
 bcrypt = Bcrypt()
-
 jwt = JWTManager()
+db = SQLAlchemy()  # inicializo la instancia de SQLAlchemy 
 
 def create_app(config_class=config['development']):
     app = Flask(__name__)
     app.config.from_object(config_class)
     api = Api(app, version='1.0', title='HBnB API', description='HBnB Application API')
+    
     bcrypt.init_app(app)
     jwt.init_app(app)
+    db.init_app(app)  # inicializo sql alquemy con la app
 
     api.add_namespace(users_ns, path='/api/v1/users')
     api.add_namespace(amenities_ns, path='/api/v1/amenities')

@@ -5,12 +5,19 @@ import uuid
 from app.models.base import BaseModel
 from email_validator import validate_email, EmailNotValidError
 from flask import current_app
-
+from app import db, bcrypt
 
 
 class User(BaseModel):
     """Class User, inherits from BaseModel"""
-    
+    __tablename__ = 'users'
+
+    first_name = db.Column(db.String(50), nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(120), nullable=False, unique=True)
+    password = db.Column(db.String(128), nullable=False)
+    is_admin = db.Column(db.Boolean, default=False)
+
     def __init__(self, first_name: str, last_name: str, email: str, password: str, is_admin: bool = False):
         super().__init__()
         self.id = str(uuid.uuid4())
