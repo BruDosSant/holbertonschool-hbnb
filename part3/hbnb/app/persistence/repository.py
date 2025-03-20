@@ -1,6 +1,4 @@
-from abc import ABC, abstractmethod
-from hbnb.app.persistence.repository import SQLAlchemyRepository
-from hbnb.app.models.user import User  
+from abc import ABC, abstractmethod 
 
 class Repository(ABC):
     @abstractmethod
@@ -87,6 +85,7 @@ class SQLAlchemyRepository(Repository):
 
 class UserRepository(SQLAlchemyRepository):
     def __init__(self):
+        from hbnb.app.models.user import User
         super().__init__(User)
 
     def get_user_by_email(self, email):

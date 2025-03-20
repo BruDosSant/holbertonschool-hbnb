@@ -4,8 +4,6 @@
 from app import db
 import uuid
 from .base import BaseModel
-from .user import User
-
 
 class Place(BaseModel):
     """Class Place, inherits from BaseModel"""
@@ -18,17 +16,18 @@ class Place(BaseModel):
     price = db.Column(db.Float, nullable=False)
     latitude = db.Column(db.Float, nullable=False)
     longitude = db.Column(db.Float, nullable=False)
-    
-    
-    
-    def __init__(self, title: str, price: float, latitude: float, longitude: float, owner: User, description=None, amenities=None, reviews=None, place_id=None):
-        """Constructor method"""      
+
+    def __init__(self, title: str, price: float, latitude: float, longitude: float, owner, description=None, amenities=None, reviews=None, place_id=None):
+        """Constructor method"""
+        from .user import User  # Importación diferida
         super().__init__()
         self.title = title
         self.description = description
         self.price = price
         self.latitude = latitude
         self.longitude = longitude
+        if not isinstance(owner, User):
+            raise ValueError("Owner must be a User instance")
         self.owner = owner
         self.reviews = []
         self.amenities = amenities or []
@@ -91,8 +90,6 @@ class Place(BaseModel):
     
     @owner.setter
     def owner(self, value):  
-        if not isinstance(value, User):
-            raise ValueError("Owner must be a User instance")
         self._owner = value
     
     def add_review(self, review):
