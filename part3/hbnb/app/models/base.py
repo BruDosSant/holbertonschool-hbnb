@@ -4,7 +4,7 @@
 
 import uuid
 from datetime import datetime
-from app import db
+from hbnb.app import db
 
 
 class BaseModel(db.Model):

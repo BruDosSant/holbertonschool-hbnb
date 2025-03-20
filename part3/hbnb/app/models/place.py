@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """Class Place"""
 
-from app import db
+from hbnb.app import db
 import uuid
 from .base import BaseModel
 

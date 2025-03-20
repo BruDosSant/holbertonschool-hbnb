@@ -2,10 +2,10 @@
 """Class User"""
 
 import uuid
-from app.models.base import BaseModel
+from hbnb.app.models.base import BaseModel
 from email_validator import validate_email, EmailNotValidError
 from flask import current_app
-from app import db, bcrypt
+from hbnb.app import db, bcrypt
 
 
 class User(BaseModel):

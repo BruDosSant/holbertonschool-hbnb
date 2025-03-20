@@ -9,11 +9,18 @@ created_at (DateTime): Timestamp when the amenity is created.
 updated_at (DateTime): Timestamp when the amenity is last updated.
 '''
 
-from app.models.base import BaseModel
+from hbnb.app.models.base import BaseModel
+from hbnb.app import db
+from .base import BaseModel
 
 class Amenity(BaseModel):
     ''' Class Amenity, inherits from BaseModel '''
     
+    __tablename__ = 'amenities'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(50), nullable=False)
+
     def __init__(self, name: str):
         super().__init__()
         self.name = name

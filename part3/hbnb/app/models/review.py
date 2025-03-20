@@ -1,8 +1,16 @@
 import uuid
 from datetime import datetime
-from app.models.base import BaseModel
+from hbnb.app.models.base import BaseModel
+from hbnb.app import db
+from .base import BaseModel
 
 class Review(BaseModel):
+    __tablename__ = 'reviews'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    text = db.Column(db.String(1024), nullable=False)
+    rating = db.Column(db.Integer, nullable=False)
+
     def __init__(self, text, rating, place, user):
         """
         Crea una nueva instancia de Review.

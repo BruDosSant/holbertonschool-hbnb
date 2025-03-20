@@ -90,3 +90,27 @@ class UserRepository(SQLAlchemyRepository):
 
     def get_user_by_email(self, email):
         return self.model.query.filter_by(email=email).first()
+    
+class PlaceRepository(SQLAlchemyRepository):
+    def __init__(self):
+        from hbnb.app.models.place import Place
+        super().__init__(Place)
+
+    def get_place_by_id(self, place_id):
+        return self.model.query.get(place_id)
+    
+class ReviewRepository(SQLAlchemyRepository):
+    def __init__(self):
+        from hbnb.app.models.review import Review
+        super().__init__(Review)
+
+    def get_review_by_id(self, review_id):
+            return self.model.query.get(review_id)
+    
+class AmenityRepository(SQLAlchemyRepository):
+    def __init__(self):
+        from hbnb.app.models.amenity import Amenity
+        super().__init__(Amenity)
+
+    def get_amenity_by_id(self, amenity_id):
+        return self.model.query.get(amenity_id)
