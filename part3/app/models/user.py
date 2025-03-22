@@ -2,10 +2,10 @@
 """Class User"""
 
 import uuid
-from hbnb.app.models.base import BaseModel
+from app.models.base import BaseModel
 from email_validator import validate_email, EmailNotValidError
 from flask import current_app
-from hbnb.app import db, bcrypt
+from app import db, bcrypt
 from sqlalchemy.orm import validates, relationship
 
 

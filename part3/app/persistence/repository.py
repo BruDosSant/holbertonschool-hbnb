@@ -57,7 +57,7 @@ class SQLAlchemyRepository(Repository):
         self.model = model
 
     def add(self, obj):
-        from hbnb.app import db
+        from app import db
         db.session.add(obj)
         db.session.commit()
 
@@ -85,7 +85,7 @@ class SQLAlchemyRepository(Repository):
 
 class UserRepository(SQLAlchemyRepository):
     def __init__(self):
-        from hbnb.app.models.user import User
+        from app.models.user import User
         super().__init__(User)
 
     def get_user_by_email(self, email):
@@ -93,7 +93,7 @@ class UserRepository(SQLAlchemyRepository):
     
 class PlaceRepository(SQLAlchemyRepository):
     def __init__(self):
-        from hbnb.app.models.place import Place
+        from app.models.place import Place
         super().__init__(Place)
 
     def get_place_by_id(self, place_id):
@@ -101,7 +101,7 @@ class PlaceRepository(SQLAlchemyRepository):
     
 class ReviewRepository(SQLAlchemyRepository):
     def __init__(self):
-        from hbnb.app.models.review import Review
+        from app.models.review import Review
         super().__init__(Review)
 
     def get_review_by_id(self, review_id):
@@ -109,7 +109,7 @@ class ReviewRepository(SQLAlchemyRepository):
     
 class AmenityRepository(SQLAlchemyRepository):
     def __init__(self):
-        from hbnb.app.models.amenity import Amenity
+        from app.models.amenity import Amenity
         super().__init__(Amenity)
 
     def get_amenity_by_id(self, amenity_id):

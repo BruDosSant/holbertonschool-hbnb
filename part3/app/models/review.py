@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
-from hbnb.app.models.base import BaseModel
-from hbnb.app import db
+from app.models.base import BaseModel
+from app import db
 from .base import BaseModel
 
 class Review(BaseModel):

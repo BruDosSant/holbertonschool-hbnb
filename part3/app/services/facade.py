@@ -1,8 +1,8 @@
-from hbnb.app.persistence.repository import PlaceRepository, ReviewRepository, AmenityRepository, UserRepository
-from hbnb.app.models.user import User
-from hbnb.app.models.amenity import Amenity
-from hbnb.app.models.place import Place
-from hbnb.app.models.review import Review
+from app.persistence.repository import PlaceRepository, ReviewRepository, AmenityRepository, UserRepository
+from app.models.user import User
+from app.models.amenity import Amenity
+from app.models.place import Place
+from app.models.review import Review
 
 class HBnBFacade:
     def __init__(self):

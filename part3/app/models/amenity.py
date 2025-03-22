@@ -9,8 +9,8 @@ created_at (DateTime): Timestamp when the amenity is created.
 updated_at (DateTime): Timestamp when the amenity is last updated.
 '''
 
-from hbnb.app.models.base import BaseModel
-from hbnb.app import db
+from app.models.base import BaseModel
+from app import db
 from .base import BaseModel
 
 class Amenity(BaseModel):
