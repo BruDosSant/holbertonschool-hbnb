@@ -7,17 +7,22 @@ from email_validator import validate_email, EmailNotValidError
 from flask import current_app
 from app import db, bcrypt
 from sqlalchemy.orm import validates, relationship
+from flask_sqlalchemy import SQLAlchemy
 
 
 class User(BaseModel):
     """Class User, inherits from BaseModel"""
     __tablename__ = 'users'
 
+    id = db.Column(db.String(36), primary_key=True)
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(120), nullable=False, unique=True)
     password = db.Column(db.String(128), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
+
+    places = db.relationship('Place', backref='user', lazy=True, cascade='all, delete-orphan')
+    reviews = db.relationship('Review', backref='user', lazy=True, cascade='all, delete-orphan')
 
     def __init__(self, first_name: str, last_name: str, email: str, password: str, is_admin: bool = False):
         super().__init__()

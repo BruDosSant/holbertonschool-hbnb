@@ -12,6 +12,7 @@ updated_at (DateTime): Timestamp when the amenity is last updated.
 from app.models.base import BaseModel
 from app import db
 from .base import BaseModel
+from flask_sqlalchemy import SQLAlchemy
 
 class Amenity(BaseModel):
     ''' Class Amenity, inherits from BaseModel '''

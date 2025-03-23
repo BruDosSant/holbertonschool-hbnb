@@ -3,6 +3,7 @@ from datetime import datetime
 from app.models.base import BaseModel
 from app import db
 from .base import BaseModel
+from flask_sqlalchemy import SQLAlchemy
 
 class Review(BaseModel):
     __tablename__ = 'reviews'
@@ -10,6 +11,10 @@ class Review(BaseModel):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     text = db.Column(db.String(1024), nullable=False)
     rating = db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
+    place_id = db.Column(db.Integer, db.ForeignKey('places.id'), nullable=False)
+
+    place = db.relationship('Place', backref='reviews', lazy=True)
 
     def __init__(self, text, rating, place, user):
         """

@@ -31,7 +31,7 @@ class AmenityList(Resource):
 
     @api.response(200, 'List of amenities retrieved successfully')
     def get(self):
-        from hbnb.app.services import facade
+        from app.services import facade
         """Retrieve a list of all amenities"""
         list_amenity = facade.get_all_amenities()
         return [{'id': amenity.id, 'name': amenity.name} for amenity in list_amenity], 200
@@ -42,7 +42,7 @@ class AmenityResource(Resource):
     @api.response(200, 'Amenity details retrieved successfully')
     @api.response(404, 'Amenity not found')
     def get(self, amenity_id):
-        from hbnb.app.services import facade
+        from app.services import facade
         """Get amenity details by ID"""
         amenity = facade.amenity_repo.get(amenity_id)
         
@@ -74,7 +74,7 @@ class AmenityResource(Resource):
 class AdminAmenityModify(Resource):
     @jwt_required()
     def put(self, amenity_id):
-        from hbnb.app.services import facade
+        from app.services import facade
         """Admin modifies an amenity"""
         current_user = get_jwt_identity() #obtiene el usuario actual
         if not current_user['is_admin']: #si el usuario no es admin
@@ -88,7 +88,7 @@ class AdminAmenityModify(Resource):
 class AdminAmenityCreate(Resource):
     @jwt_required()
     def post(self):
-        from hbnb.app.services import facade
+        from app.services import facade
         """Admin creates an amenity"""
         current_user = get_jwt_identity() #obtiene el usuario actual
         if not current_user['is_admin']: #si el usuario no es admin
