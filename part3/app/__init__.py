@@ -21,9 +21,6 @@ def create_app(config_class=config['development']):
     db.init_app(app)  # inicializo sql alquemy con la app
     migrate.init_app(app, db)
 
-    with app.app_context():
-        db.create_all()  # creo las tablas en la base de datos
-
     # importamos los namespaces dentro para evitar circular imports
     from app.api.v1.amenities import api as amenities_ns
     from app.api.v1.places import api as places_ns
