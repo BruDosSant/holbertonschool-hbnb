@@ -1,25 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Review</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add Review</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <main>
-        <!-- Add something to idfentify the place you're reviewing -->
-        <form id="review-form">
-            <h2>Add a Review</h2>
-            <label for="review">Your Review:</label>
-            <textarea id="review" name="review" required></textarea>
-            <label for="rating">Rating:</label>
-            <select id="rating" name="rating" required>
-                <!-- Options for rating -->
-            </select>
-            <button type="submit">Submit Review</button>
-        </form>
-    </main>
-    <script src="scripts.js"></script>
+
+  <!-- HEADER -->
+  <header>
+    <img src="images/logo.png" alt="Logo" class="logo" />
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="login.html" class="login-button">Login</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Identificación del lugar (recomendado aunque no es obligatorio) -->
+    <h2>Leave a Review for: Sunny Apartment</h2>
+
+    <!-- Formulario con clases requeridas -->
+    <section class="add-review">
+      <form id="review-form" class="form">
+        <label for="review">Your Review:</label>
+        <textarea id="review" name="review" required></textarea>
+
+        <label for="rating">Rating:</label>
+        <select id="rating" name="rating" required>
+          <option value="">Select a rating</option>
+          <option value="1">⭐</option>
+          <option value="2">⭐⭐</option>
+          <option value="3">⭐⭐⭐</option>
+          <option value="4">⭐⭐⭐⭐</option>
+          <option value="5">⭐⭐⭐⭐⭐</option>
+        </select>
+
+        <button type="submit">Submit Review</button>
+      </form>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 Airbnb Clone. All rights reserved.</p>
+  </footer>
+
+  <script src="scripts.js"></script>
 </body>
 </html>
